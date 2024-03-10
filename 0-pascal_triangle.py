@@ -1,4 +1,17 @@
+#!/usr/bin/python3
+# pseudocode:
+# create a list to store the outer list
+# iterate through the number of rows
+# create an inner list to store the values
+# iterate through the inner list
+# find the value of the combination of n and k
+# append the value to the inner list
+# append the inner list to the outer list
+# return the outer list
+# end
 def pascal_triangle(numRows):
+    if (numRows <= 0):
+        return ([])
     outer_list = []
     for n in range(0, numRows):
         inside_list = []
