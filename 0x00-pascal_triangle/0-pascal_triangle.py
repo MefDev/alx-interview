@@ -1,15 +1,20 @@
 #!/usr/bin/python3
-# pseudocode:
-# create a list to store the outer list
-# iterate through the number of rows
-# create an inner list to store the values
-# iterate through the inner list
-# find the value of the combination of n and k
-# append the value to the inner list
-# append the inner list to the outer list
-# return the outer list
-# end
+"""Pascal's Triangle"""
+"""Psuedo code"""
+"""
+create a list to store the outer list
+iterate through the number of rows
+create an inner list to store the values
+iterate through the inner list
+find the value of the combination of n and k
+append the value to the inner list
+append the inner list to the outer list
+ return the outer list
+"""
+
+
 def pascal_triangle(numRows):
+    """Pascal's Triangle"""
     if (numRows <= 0):
         return ([])
     outer_list = []
@@ -23,6 +28,7 @@ def pascal_triangle(numRows):
 
 
 def findFact(n):
+    """Find the factorial of a number"""
     if n == 0 or n == 1:
         return 1
     else:
@@ -30,4 +36,5 @@ def findFact(n):
 
 
 def findComb(n, k):
+    """Find the combination of n and k"""
     return findFact(n) / (findFact(k) * findFact(n - k))
