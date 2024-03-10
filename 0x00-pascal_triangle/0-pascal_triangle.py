@@ -29,15 +29,10 @@ def pascal_triangle(numRows):
 
 def findFact(n):
     """Find the factorial of a number"""
-    factorial_memo = {}
-    if n in factorial_memo:
-            return factorial_memo[n]
-    
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    factorial_memo[n] = result
-    return result
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * findFact(n - 1)
 
 
 def findComb(n, k):
