@@ -1,48 +1,52 @@
 #!/usr/bin/python3
-"""Check the stats of file"""
+""" Log parsing """
 import sys
-from signal import SIGINT
-import re
+from collections import defaultdict
 
 
-def check_format(stringTocheckFor):
-    """Check the formatting"""
-    adrs = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-    tmstp = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}'
-    mtd = r'\w+'
-    pth = r'[^"]+'
-    c = r'\d{3}'
-    byt = r'\d+'
-
-    pattern = rf'^({adrs}) - \[({tmstp})\] "({mtd})\s({pth})" ({c}) ({byt})$'
-    return re.match(pattern, stringTocheckFor)
+def print_stats(total_size, status_counts):
+    """ Print stats """
+    print("File size: {}".format(total_size))
+    for status_code in sorted(status_counts.keys()):
+        if status_counts[status_code] > 0:
+            print("{}: {}".format(status_code, status_counts[status_code]))
 
 
-def print_status_code(keyCodes, status_code_list):
-    """Print status code"""
-    for index, status_code in enumerate(status_code_list):
-        print("{}: {}".format(status_code, keyCodes[status_code]))
+def process_line(line, total_size, status_counts):
+    """ Process a line from stdin """
+    parts = line.split()
+    try:
+        status_code = int(parts[-2])
+
+        if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
+            status_counts[status_code] += 1
+
+    except (ValueError, IndexError):
+        pass
+
+    try:
+        file_size = int(parts[-1])
+
+        total_size += file_size
+
+    except (ValueError, IndexError):
+        pass
+
+    return total_size, status_counts
 
 
-if __name__ == "__main__":
-    counter = 0
-    keyCodes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-    status_code_list = [200, 301, 400, 401, 403, 404, 405, 500]
+total_size = 0
+status_counts = defaultdict(int)
+line_count = 0
+
+try:
     for line in sys.stdin:
-        isValidFormat = check_format(line)
-        if isValidFormat:
-            counter += 1
-            if counter < 10 and SIGINT:
-                status_code = int(isValidFormat.group(5))
-                if not isinstance(status_code, int) or not status_code:
-                    pass
-                file_size = isValidFormat.group(6)
-                file_size += file_size
-                try:
-                    keyCodes[status_code] += 1
-                except (IndexError) as e:
-                    print('{}: The index is out of range'.format(e))
-            if (counter == 10):
-                counter = 0
-                print_status_code(keyCodes, status_code_list)
-                print("File size: {}".format(file_size))
+        line_count += 1
+        total_size, status_counts = process_line(
+            line, total_size, status_counts)
+
+        if line_count % 10 == 0:
+            print_stats(total_size, status_counts)
+
+finally:
+    print_stats(total_size, status_counts)
