@@ -30,20 +30,19 @@ if __name__ == "__main__":
     status_code_list = [200, 301, 400, 401, 403, 404, 405, 500]
     for line in sys.stdin:
         isValidFormat = check_format(line)
-        if not isValidFormat:
-            continue
-        counter += 1
-        if counter < 10 and SIGINT:
-            status_code = int(isValidFormat.group(5))
-            if not isinstance(status_code, int) or not status_code:
-                pass
-            file_size = isValidFormat.group(6)
-            file_size += file_size
-            try:
-                keyCodes[status_code] += 1
-            except (IndexError) as e:
-                print('{}: The index is out of range'.format(e))
-        if (counter == 10):
-            counter = 0
-            print_status_code(keyCodes, status_code_list)
-            print("File size: {}".format(file_size))
+        if isValidFormat:
+            counter += 1
+            if counter < 10 and SIGINT:
+                status_code = int(isValidFormat.group(5))
+                if not isinstance(status_code, int) or not status_code:
+                    pass
+                file_size = isValidFormat.group(6)
+                file_size += file_size
+                try:
+                    keyCodes[status_code] += 1
+                except (IndexError) as e:
+                    print('{}: The index is out of range'.format(e))
+            if (counter == 10):
+                counter = 0
+                print_status_code(keyCodes, status_code_list)
+                print("File size: {}".format(file_size))
