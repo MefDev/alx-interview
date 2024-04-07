@@ -1,4 +1,5 @@
-# check for valid UTF-8 encoding
+#!/usr/bin/python3
+
 # Return: True if data is a valid UTF-8 encoding, else return False
 # Data: list of integers
 
