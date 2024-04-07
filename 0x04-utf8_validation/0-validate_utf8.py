@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-# Return: True if data is a valid UTF-8 encoding, else return False
-# Data: list of integers
 
 def validUTF8(data):
     """
@@ -34,7 +32,7 @@ def validUTF8(data):
             if n_bytes == 1 or n_bytes > 4:
                 return False
         else:
-            # If this integer is a part of an existing UTF-8 character, then we simply have to look at the two most significant bits and we make use of the masks we defined before
+
             if not (num & mask1 and not (num & mask2)):
                 return False
         n_bytes -= 1
